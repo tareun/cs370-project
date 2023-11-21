@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Information</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #backButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Artist Information</h1>
+        <div id="result"></div>
+        <button id="backButton" onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        // back to prev page
+        function goBack() {
+            window.history.back();
+        }
+
+        // get artist info from url
+        function getArtistInfoFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('artist');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // artist info
+            const resultDiv = document.getElementById("result");
+            const artistName = getArtistInfoFromURL();
+
+            // Update the resultDiv with basic information
+            //const resultDiv = document.getElementById("result");
+            resultDiv.innerText = `Artist Name: ${artistName}`;
+            //resultDiv.innerHTML = `<p>Artist Name: ${artistName}</p>`;
+
+        });
+    </script>
+</body>
+</html>
