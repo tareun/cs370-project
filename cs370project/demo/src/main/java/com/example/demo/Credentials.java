@@ -9,8 +9,8 @@ import org.apache.hc.core5.http.ParseException;
 import java.io.IOException;
 
 public class Credentials{
-    private static final String clientId = "46002b30975c4fb4b1bcd20aa0884acb";
-    private static final String clientSecret = "04982263a5d241b6aa0d277a68a1e513";
+    private static final String clientId = "";
+    private static final String clientSecret = "";
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setClientId(clientId)
