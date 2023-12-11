@@ -15,4 +15,7 @@ public interface RecommendedArtistRepository extends JpaRepository<RecommendedAr
     @Modifying
     @Query(value = "ALTER TABLE recommended_artist AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
+
+    boolean existsByArtistName(String artistName);
+
 }
