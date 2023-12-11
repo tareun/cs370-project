@@ -9,6 +9,8 @@ public class RecommendedArtist {
     private Long id;
 
     private String artistName;
+    private String genres;
+
 
     // Constructors, getters, and setters
 
@@ -29,5 +31,9 @@ public class RecommendedArtist {
 
     public void setArtistName(String artistName) {
         this.artistName = artistName;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
     }
 }
