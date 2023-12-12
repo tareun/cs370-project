@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Information</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #result, #storedArtists {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        #backButton, #storeArtistButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #backButton {
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #storeArtistButton {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #storedArtists ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #storedArtists li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h1>Artist Information</h1>
+    <div id="result"></div>
+    <button id="backButton" onclick="goBack()">Go Back</button>
+    <button id="storeArtistButton" onclick="storeArtist()">Store Artist</button>
+    <div id="storedArtists"></div>
+</div>
+
+<script>
+    // back to prev page
+    function goBack() {
+        window.history.back();
+    }
+
+    // get artist info from url
+    function getArtistInfoFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('artist');
+    }
+
+    // store artist in the database
+    function storeArtist() {
+        const artistName = getArtistInfoFromURL();
+
+        // Send a request to the backend to store the artist
+        fetch('/api/store-artist?artistName=' + encodeURIComponent(artistName), {
+            method: 'POST'
+        })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                // Refresh stored artists after storing a new one
+                fetchStoredArtists();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error storing artist.');
+            });
+    }
+
+    // fetch stored artists from the backend
+    function fetchStoredArtists() {
+        fetch('/api/get-stored-artists')
+            .then(response => response.json())
+            .then(storedArtists => {
+                const storedArtistsDiv = document.getElementById("storedArtists");
+                // Update the storedArtistsDiv with the fetched data
+                storedArtistsDiv.innerHTML = `<h2>Stored Artists</h2><ul>${storedArtists.map(artist => `<li>${artist.artistName} - Genres: ${artist.genres}</li>`).join('')}</ul>`;
+
+                //storedArtistsDiv.innerHTML = `<h2>Stored Artists</h2><ul>${storedArtists.map(artist => `<li>${artist.artistName} - Genres: ${artist.genres}</li>`).join('')}</ul>`;
+            })
+            .catch(error => {
+                console.error('Error fetching stored artists:', error);
+                alert('Error fetching stored artists.');
+            });
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // artist info
+        const resultDiv = document.getElementById("result");
+        //const storedArtistsDiv = document.getElementById("storedArtists");
+
+        // Get artist info from URL
+        const artistName = getArtistInfoFromURL();
+
+        // Update the resultDiv with basic information
+        resultDiv.innerText = `Artist Name: ${artistName}`;
+
+        // Fetch stored artists from the backend
+        fetchStoredArtists();
+    });
+</script>
+</body>
+</html>

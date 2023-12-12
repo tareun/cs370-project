@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>personIFY</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            animation: rotateGradient 4s linear infinite; 
+        }
+
+        @keyframes rotateGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        #container {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        #container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #inputBox {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #submitBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        
+        .music-note {
+            position: absolute;
+            font-size: 20px;
+            color: #ffffff; 
+            animation: floatNote 5s infinite linear; 
+        }
+
+        @keyframes floatNote {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Welcome to personIFY</h1>
+        <p>Enter an artist or band:</p>
+        <input type="text" id="inputBox" placeholder="Enter here">
+        <button id="submitBtn" onclick="submitInput()">Get Recommendations</button>
+    </div>
+
+    <script>
+        
+        function setRandomGradient() {
+            const body = document.body;
+            body.style.background = `linear-gradient(45deg, ${getRandomColor()}, ${getRandomColor()}, ${getRandomColor()}, ${getRandomColor()})`;
+        }
+
+        
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // 
+        function createMusicNote() {
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.innerHTML = '♩'; 
+            document.body.appendChild(note);
+
+            // Randomize position
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            note.style.left = Math.random() * screenWidth + 'px';
+            note.style.top = Math.random() * screenHeight + 'px';
+        }
+
+        // transition and user input
+        function submitInput() {
+            const inputBox = document.getElementById("inputBox");
+            const artist = inputBox.value;
+
+            // sends a request to the backend to get artist info
+            fetch('http://localhost:8080/api/retrieve-data?artistName=' + encodeURIComponent(artist))
+                .then(response => response.text())
+                .then(artistName => {
+
+                    console.log("Fetch request successful!");
+                    //alert(`Artist Name: ${artistName}`);
+
+                    // redirect to result.html
+                    window.location.href = "http://localhost:8080/resultc.html?artist=" + encodeURIComponent(artistName);
+                    //window.location.href = `/result.html?artist=${encodeURIComponent(artistName)}`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching artist information');
+                });
+        }
+
+        
+        setRandomGradient();
+
+        // every 4 seconds
+        setInterval(function () {
+            setRandomGradient();
+        }, 4000);
+
+        
+        setInterval(function () {
+            createMusicNote();
+        }, 2000); 
+
+        // delay 
+        document.addEventListener("DOMContentLoaded", function () {
+            const container = document.getElementById("container");
+            setTimeout(function () {
+                container.classList.add("show");
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+
+
