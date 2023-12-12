@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 public class AccessController
@@ -91,10 +93,24 @@ public class AccessController
             recommendedArtist.setGenres(genres);
             recommendedArtistRepository.save(recommendedArtist);
 
+
+
             return "Artist stored in the database.";
         }else
         {
             return "invalid data format";
         }
+    }
+
+    @GetMapping("/api/get-stored-artists")
+    public List<RecommendedArtist> getStoredArtists() {
+        List<RecommendedArtist> storedArtists = recommendedArtistRepository.findAll();
+
+        // Log the retrieved data
+        storedArtists.forEach(artist -> System.out.println("Artist: " + artist.getArtistName() + ", Genres: " + artist.getGenres()));
+
+        return storedArtists;
+
+        //return recommendedArtistRepository.findAll();
     }
 }
