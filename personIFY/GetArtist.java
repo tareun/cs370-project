@@ -47,15 +47,25 @@ public class GetArtist {
         try {
 
             Artist artist = spotifyApi.getArtist(artistId).build().execute();
-
+            /*
             // Return information about the artist
             return "" + artist.getName() + "\nGenres: " + String.join(", ", artist.getGenres());
             //return "" + artist.getName();
+
+            */
+
+            // Check if genres is not null before joining
+            String genres = artist.getGenres() != null ? String.join(", ", artist.getGenres()) : "N/A";
+
+            // Return information about the artist
+            return "" + artist.getName() + "\nGenres: " + genres;
+
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error getting artist information: " + e.getMessage());
             return "Error retrieving artist information";
         }
     }
+
 
     public static List<String> getSimilarArtists(String accessToken, String artistName) {
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -114,4 +124,5 @@ public class GetArtist {
             return "No similar artists found";
         }
     }
+
 }
